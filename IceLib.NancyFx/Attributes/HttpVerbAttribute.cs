@@ -61,6 +61,20 @@ namespace IceLib.NancyFx.Attributes
             return route.ToString().ToLower();
         }
 
+        protected object[] GetMethodParameters(System.Reflection.MethodInfo method, dynamic _)
+        {
+            var parameters = new List<object>();
+
+            foreach (var parameter in method.GetParameters())
+            {
+                var typedParameter = Convert.ChangeType(_[parameter.Name], parameter.ParameterType);
+
+                parameters.Add(typedParameter);
+            }
+
+            return parameters.ToArray();
+        }
+
         public void BindRoute(NancyModule module, System.Reflection.MethodInfo method)
         {
             var routeBuilder = this.GetRouteBuilder(module);
@@ -69,23 +83,16 @@ namespace IceLib.NancyFx.Attributes
 
             routeBuilder[route] = _ =>
             {
-                var parameters = new List<object>();
-
-                foreach (var parameter in method.GetParameters())
-                {
-                    var typedParameter = Convert.ChangeType(_[parameter.Name], parameter.ParameterType);
-
-                    parameters.Add(typedParameter);
-                }
+                var parameters = GetMethodParameters(method, _);
 
                 if (method.ReturnParameter.ParameterType == typeof(void))
                 {
-                    method.Invoke(this, parameters.ToArray());
+                    method.Invoke(this, parameters);
 
                     return module.Negotiate.WithStatusCode(HttpStatusCode.OK);
                 }
 
-                return method.Invoke(module, parameters.ToArray());
+                return method.Invoke(module, parameters);
             };
         }
     }
