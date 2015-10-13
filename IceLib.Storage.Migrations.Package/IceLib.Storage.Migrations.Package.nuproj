@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>3d8da8ea-92e2-453f-8592-33bc9df3b8d4</ProjectGuid>
+    <OutputPath>../.IceLib.Packages/</OutputPath>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <NuBuildVersionSource>Library</NuBuildVersionSource>
+    <NuBuildVersionFileName>True</NuBuildVersionFileName>
+    <NuBuildAddBinariesToSubfolder>False</NuBuildAddBinariesToSubfolder>
+    <NuBuildIncludePdbs>False</NuBuildIncludePdbs>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="IceLib.Storage.Migrations.Package.nuspec" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IceLib.Storage.Migrations\IceLib.Storage.Migrations.csproj">
+      <Name>IceLib.Storage.Migrations</Name>
+      <Project>{cae9516b-212c-4c68-857c-8f05d6c79401}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\NuBuild\v1\NuBuild.targets" />
+</Project>

@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>cc349530-2f4f-45bd-a0f5-d63fed29fae3</ProjectGuid>
+    <OutputPath>../.IceLib.Packages/</OutputPath>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <NuBuildVersionSource>Library</NuBuildVersionSource>
+    <NuBuildVersionFileName>True</NuBuildVersionFileName>
+    <NuBuildAddBinariesToSubfolder>False</NuBuildAddBinariesToSubfolder>
+    <NuBuildIncludePdbs>False</NuBuildIncludePdbs>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="IceLib.Core.Package.nuspec" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IceLib.Core\IceLib.Core.csproj">
+      <Name>IceLib.Core</Name>
+      <Project>{674ddd6a-f486-477a-8ed0-d444782b4a6c}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\NuBuild\v1\NuBuild.targets" />
+</Project>

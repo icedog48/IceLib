@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>531476e8-c6a0-4906-94ca-4bdf054d08b5</ProjectGuid>
+    <OutputPath>../.IceLib.Packages/</OutputPath>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <NuBuildVersionSource>Library</NuBuildVersionSource>
+    <NuBuildVersionFileName>True</NuBuildVersionFileName>
+    <NuBuildAddBinariesToSubfolder>False</NuBuildAddBinariesToSubfolder>
+    <NuBuildIncludePdbs>False</NuBuildIncludePdbs>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="IceLib.Storage.NHibernate.Package.nuspec" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IceLib.Storage.NHibernate\IceLib.Storage.NHibernate.csproj">
+      <Name>IceLib.Storage.NHibernate</Name>
+      <Project>{76ec83e0-c601-4caf-a14a-0f497d8e2b51}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\NuBuild\v1\NuBuild.targets" />
+</Project>
