@@ -4,7 +4,7 @@
     <ProjectGuid>0c68df06-1b23-463c-b920-a7e63315a06e</ProjectGuid>
     <OutputPath>../.IceLib.Packages/</OutputPath>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <NuBuildVersionSource>Library</NuBuildVersionSource>
+    <NuBuildVersionSource>Manual</NuBuildVersionSource>
     <NuBuildVersionFileName>True</NuBuildVersionFileName>
     <NuBuildAddBinariesToSubfolder>False</NuBuildAddBinariesToSubfolder>
     <NuBuildIncludePdbs>False</NuBuildIncludePdbs>
