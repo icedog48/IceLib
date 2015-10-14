@@ -1,5 +1,7 @@
 ﻿using IceLib.NancyFx.Attributes;
+using IceLib.NancyFx.Helpers;
 using Nancy;
+using Nancy.Responses.Negotiation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,16 +15,11 @@ namespace IceLib.NancyFx.Extensions
     {
         public static void BindRoutes(this NancyModule module)
         {
-            var handlerMethods = module.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var handlerMethods = RouteHelper.GetRouteMethods(module);
 
             foreach (MethodInfo method in handlerMethods)
             {
-                var httpVerbAttributes = method.GetCustomAttributes(typeof(HttpVerbAttribute), true);
-
-                foreach (var attribute in httpVerbAttributes)
-                {
-                    (attribute as HttpVerbAttribute).BindRoute(module, method);
-                }
+                RouteHelper.BindRoute(module, method);
             }
         }
     }

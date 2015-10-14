@@ -50,6 +50,8 @@
     <Compile Include="Attributes\PostAttribute.cs" />
     <Compile Include="Attributes\PutAttribute.cs" />
     <Compile Include="Extensions\NancyModuleExtensions.cs" />
+    <Compile Include="Helpers\ReflectionHelper.cs" />
+    <Compile Include="Helpers\RouteHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

@@ -18,7 +18,7 @@ namespace IceLib.NancyFx.Attributes
 
         }
 
-        protected override Nancy.NancyModule.RouteBuilder GetRouteBuilder(Nancy.NancyModule module)
+        public override Nancy.NancyModule.RouteBuilder GetRouteBuilder(Nancy.NancyModule module)
         {
             return module.Put;
         }
