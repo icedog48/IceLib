@@ -12,23 +12,29 @@ namespace IceLib.NancyFx.Attributes
     [AttributeUsage(AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
     public abstract class HttpVerbAttribute : Attribute
     {
+        public const string ROUTE_SEPARATOR = "/";
+
         private readonly Type resource;
+
+        #region Constructors
 
         public HttpVerbAttribute()
         {
 
-        }        
-
-        public const char ROUTE_SEPARATOR = '/';
-
-        public Type Resource { get; set; }
+        }
 
         public HttpVerbAttribute(Type resource)
         {
             this.resource = resource;
         }
 
-        public string ResourceName 
+        #endregion Constructors
+
+        #region Properties
+
+        public Type Resource { get; set; }
+
+        public string ResourceName
         {
             get
             {
@@ -38,36 +44,41 @@ namespace IceLib.NancyFx.Attributes
             }
         }
 
+        #endregion Properties
+
+        #region Methods
+
         protected abstract Nancy.NancyModule.RouteBuilder GetRouteBuilder(Nancy.NancyModule module);
 
         protected string CreateRouteParameter(string name)
         {
-            var parameterFormat = @"{0}{{{1}}}";
+            var parameterFormat = @"{{{1}}}";
 
-            return string.Format(parameterFormat, ROUTE_SEPARATOR, name);
-        }
+            return string.Format(parameterFormat, name);
+        }        
 
-        protected string CreateRoute(System.Reflection.MethodInfo method)
+        protected string CreateRoute(NancyModule module, System.Reflection.MethodInfo method)
         {
             var route = new StringBuilder();
 
-            route.Append(this.ResourceName ?? method.Name.ToLower());
+            AddRoutePath(route, module.ModulePath);
+            AddRoutePath(route, this.ResourceName ?? method.Name.ToLower());
 
             foreach (var parameter in method.GetParameters())
             {
-                route.Append(CreateRouteParameter(parameter.Name));
+                AddRoutePath(route, CreateRouteParameter(parameter.Name));
             }
 
             return route.ToString().ToLower();
         }
 
-        protected object[] GetMethodParameters(System.Reflection.MethodInfo method, dynamic _)
+        protected object[] GetMethodParameters(System.Reflection.MethodInfo method, dynamic requestParameters)
         {
             var parameters = new List<object>();
 
             foreach (var parameter in method.GetParameters())
             {
-                var typedParameter = Convert.ChangeType(_[parameter.Name], parameter.ParameterType);
+                var typedParameter = Convert.ChangeType(requestParameters[parameter.Name], parameter.ParameterType);
 
                 parameters.Add(typedParameter);
             }
@@ -75,11 +86,16 @@ namespace IceLib.NancyFx.Attributes
             return parameters.ToArray();
         }
 
+        public static void AddRoutePath(StringBuilder route, string path)
+        {
+            route.Append(string.Join(ROUTE_SEPARATOR, path));
+        }
+
         public void BindRoute(NancyModule module, System.Reflection.MethodInfo method)
         {
             var routeBuilder = this.GetRouteBuilder(module);
 
-            var route = this.CreateRoute(method);
+            var route = this.CreateRoute(module, method);
 
             routeBuilder[route] = _ =>
             {
@@ -95,5 +111,7 @@ namespace IceLib.NancyFx.Attributes
                 return method.Invoke(module, parameters);
             };
         }
+
+        #endregion Methods
     }
 }
