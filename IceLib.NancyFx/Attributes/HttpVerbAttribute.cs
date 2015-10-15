@@ -1,5 +1,4 @@
 ﻿using IceLib.NancyFx.Helpers;
-using IceLib.NancyFx.Extensions;
 
 using Nancy;
 using Nancy.Responses;
@@ -15,7 +14,7 @@ namespace IceLib.NancyFx.Attributes
     [AttributeUsage(AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
     public abstract class HttpVerbAttribute : Attribute
     {
-        private readonly Type resource;
+        private string route;
 
         #region Constructors
 
@@ -24,24 +23,20 @@ namespace IceLib.NancyFx.Attributes
 
         }
 
-        public HttpVerbAttribute(Type resource)
+        public HttpVerbAttribute(string route)
         {
-            this.resource = resource;
+            this.route = route;
         }
 
         #endregion Constructors
 
         #region Properties
 
-        public Type Resource { get; set; }
-
-        public string ResourceName
+        public string Route
         {
             get
             {
-                if (this.Resource != null) return this.Resource.Name;
-
-                return null;
+                return route;
             }
         }
 
@@ -53,16 +48,19 @@ namespace IceLib.NancyFx.Attributes
 
         public void BindRoute(NancyModule module, MethodInfo method)
         {
+            var route = new RouteHelper()
+                .AddPath(module.ModulePath)
+                .AddPath(this.Route ?? string.Empty)
+                .ToString();
+
             var routeBuilder = GetRouteBuilder(module);
 
-            var route = RouteHelper.CreateRoute(module.ModulePath, this.ResourceName ?? method.Name.ToLower(), method.GetParameters());
-
-            routeBuilder[route] = requestParameters =>
-            {
-                var methodParameters = ReflectionHelper.GetMethodParameters(method, requestParameters);
-
-                return ReflectionHelper.Invoke(module, method, methodParameters);
-            };
+                routeBuilder[route] = requestParameters =>
+                {
+                    var methodParameters = ReflectionHelper.GetMethodParameters(method, requestParameters);
+                    
+                    return ReflectionHelper.Invoke(module, method, methodParameters);
+                };
         }
 
         #endregion Methods

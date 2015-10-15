@@ -12,7 +12,8 @@ namespace IceLib.NancyFx.Attributes
 
         }
 
-        public PostAttribute(Type resource) : base(resource)
+        public PostAttribute(string route)
+            : base(route)
         {
 
         }

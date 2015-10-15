@@ -12,8 +12,8 @@ namespace IceLib.NancyFx.Attributes
 
         }
 
-        public DeleteAttribute(Type resource)
-            : base(resource)
+        public DeleteAttribute(string route)
+            : base(route)
         {
 
         }

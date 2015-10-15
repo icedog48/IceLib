@@ -12,8 +12,8 @@ namespace IceLib.NancyFx.Attributes
 
         }
 
-        public PutAttribute(Type resource)
-            : base(resource)
+        public PutAttribute(string route)
+            : base(route)
         {
 
         }

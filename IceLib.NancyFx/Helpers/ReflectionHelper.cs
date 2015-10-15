@@ -1,4 +1,5 @@
-﻿using Nancy;
+﻿using IceLib.NancyFx.Attributes;
+using Nancy;
 using Nancy.Responses.Negotiation;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,11 @@ namespace IceLib.NancyFx.Helpers
 {
     public static class ReflectionHelper
     {
+        public static MethodInfo[] GetRouteMethods(NancyModule module)
+        {
+            return module.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+        }
+
         public static object[] GetMethodParameters(MethodInfo method, dynamic requestParameters)
         {
             var parameters = new List<object>();
@@ -35,6 +41,16 @@ namespace IceLib.NancyFx.Helpers
             }
 
             return method.Invoke(module, parameters) as Negotiator;
+        }
+
+        public static void BindRoute(NancyModule module, MethodInfo method)
+        {
+            var httpVerbAttributes = method.GetCustomAttributes(typeof(HttpVerbAttribute), true);
+
+            foreach (var attribute in httpVerbAttributes)
+            {
+                (attribute as HttpVerbAttribute).BindRoute(module, method);
+            }
         }
     }
 }

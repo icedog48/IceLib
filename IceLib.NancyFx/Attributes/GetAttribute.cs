@@ -12,7 +12,8 @@ namespace IceLib.NancyFx.Attributes
 
         }
 
-        public GetAttribute(Type resource) : base(resource)
+        public GetAttribute(string route)
+            : base(route)
         {
 
         }

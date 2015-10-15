@@ -15,11 +15,11 @@ namespace IceLib.NancyFx.Extensions
     {
         public static void BindRoutes(this NancyModule module)
         {
-            var handlerMethods = RouteHelper.GetRouteMethods(module);
+            var handlerMethods = ReflectionHelper.GetRouteMethods(module);
 
             foreach (MethodInfo method in handlerMethods)
             {
-                RouteHelper.BindRoute(module, method);
+                ReflectionHelper.BindRoute(module, method);
             }
         }
     }
