@@ -36,7 +36,7 @@ namespace IceLib.NancyFx.Attributes
         {
             get
             {
-                return route;
+                return route ?? string.Empty;
             }
         }
 
@@ -49,8 +49,7 @@ namespace IceLib.NancyFx.Attributes
         public void BindRoute(NancyModule module, MethodInfo method)
         {
             var route = new RouteHelper()
-                .AddPath(module.ModulePath)
-                .AddPath(this.Route ?? string.Empty)
+                .AddPath(this.Route)
                 .ToString();
 
             var routeBuilder = GetRouteBuilder(module);

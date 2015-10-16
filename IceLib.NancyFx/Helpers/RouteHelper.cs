@@ -31,8 +31,6 @@ namespace IceLib.NancyFx.Helpers
 
         public RouteHelper AddPath(string path)
         {
-            if (string.IsNullOrEmpty(path)) return this;
-
             var routePath = path;
 
             if (!routePath.StartsWith(ROUTE_SEPARATOR))

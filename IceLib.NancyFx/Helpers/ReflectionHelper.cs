@@ -31,16 +31,9 @@ namespace IceLib.NancyFx.Helpers
             return parameters.ToArray();
         }
 
-        public static Negotiator Invoke(NancyModule module, MethodInfo method, object[] parameters)
+        public static dynamic Invoke(NancyModule module, MethodInfo method, object[] parameters)
         {
-            if (method.ReturnParameter.ParameterType == typeof(void))
-            {
-                method.Invoke(module, parameters);
-
-                return module.Negotiate.WithStatusCode(HttpStatusCode.OK);
-            }
-
-            return method.Invoke(module, parameters) as Negotiator;
+            return method.Invoke(module, parameters);
         }
 
         public static void BindRoute(NancyModule module, MethodInfo method)
