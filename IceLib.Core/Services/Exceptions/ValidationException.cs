@@ -1,4 +1,5 @@
 ﻿using FluentValidation.Results;
+using IceLib.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace IceLib.Service.Exceptions
     [Serializable]
     public class ValidationException : Exception
     {
-        public IList<ValidationFailure> Errors { get; set; }
+        public IList<ValidationError> Errors { get; set; }
 
         public ValidationException() { }
         public ValidationException(string message) : base(message) { }
@@ -20,7 +21,7 @@ namespace IceLib.Service.Exceptions
           System.Runtime.Serialization.StreamingContext context)
             : base(info, context) { }
 
-        public ValidationException(IList<ValidationFailure> errors)
+        public ValidationException(IList<ValidationError> errors)
         {
             this.Errors = errors;
         }

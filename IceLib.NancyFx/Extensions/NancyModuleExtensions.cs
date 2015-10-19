@@ -1,5 +1,6 @@
 ﻿using IceLib.NancyFx.Attributes;
 using IceLib.NancyFx.Helpers;
+using IceLib.Validation;
 using Nancy;
 using Nancy.Responses.Negotiation;
 using System;
@@ -21,6 +22,18 @@ namespace IceLib.NancyFx.Extensions
             {
                 ReflectionHelper.BindRoute(module, method);
             }
+        }
+
+        public static Negotiator ValidationErrorResponse(this NancyModule module, IEnumerable<ValidationError> errors)
+        {
+            var hasNoErrors = errors == null || !errors.Any();
+
+            if (hasNoErrors) throw new InvalidOperationException("There are no errors to make the response.");
+
+            return module
+                    .Negotiate
+                        .WithStatusCode(HttpStatusCode.BadRequest)
+                        .WithModel(errors);
         }
     }
 }

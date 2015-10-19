@@ -10,6 +10,11 @@ namespace IceLib.Model
     /// </summary>
     public abstract class Entity
     {
+        public Entity()
+        {
+            this.active = true;
+        }
+
         /// <summary>
         /// Identificador único de um objeto persistido
         /// </summary>
@@ -27,6 +32,20 @@ namespace IceLib.Model
         public virtual void ClearId() 
         {
             this.Id = 0;
+        }
+
+        private bool active;
+
+        public virtual bool Active { get { return this.active; } }
+
+        public virtual void Activate()
+        {
+            this.active = true;
+        }
+
+        public virtual void Deactivate()
+        {
+            this.active = false;
         }
     }
 }

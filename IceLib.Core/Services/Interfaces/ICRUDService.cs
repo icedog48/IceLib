@@ -15,7 +15,7 @@ namespace IceLib.Service.Interfaces
         void Update(T obj);
 
         void Remove(T obj);
-
+        
         IEnumerable<T> GetByFilter(IFilter<T> filter);
     }
 }

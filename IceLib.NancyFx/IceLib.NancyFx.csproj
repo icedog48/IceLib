@@ -54,7 +54,12 @@
     <Compile Include="Helpers\RouteHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\IceLib.Core\IceLib.Core.csproj">
+      <Project>{674ddd6a-f486-477a-8ed0-d444782b4a6c}</Project>
+      <Name>IceLib.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
