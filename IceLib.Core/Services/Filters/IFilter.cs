@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace IceLib.Service.Filters
+namespace IceLib.Services.Filters
 {
     public interface IFilter<T>
     {

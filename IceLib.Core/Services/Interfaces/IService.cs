@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace IceLib.Service.Interfaces
+namespace IceLib.Services.Interfaces
 {
     public interface IService<T> where T : Entity
     {

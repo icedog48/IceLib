@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using IceLib.Model;
-using IceLib.Service.Interfaces;
+using IceLib.Services.Interfaces;
 using IceLib.Storage;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IceLib.Service
+namespace IceLib.Services
 {
     public abstract class CRUDService<T> : ICRUDService<T> where T : Entity
     {
@@ -44,7 +44,7 @@ namespace IceLib.Service
             this.repository.Remove(obj);
         }
 
-        public virtual IEnumerable<T> GetByFilter(IceLib.Service.Filters.IFilter<T> filter)
+        public virtual IEnumerable<T> GetByFilter(IceLib.Services.Filters.IFilter<T> filter)
         {
             return filter.Apply(repository.Items).ToList(); 
         }

@@ -3,25 +3,28 @@ using IceLib.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IceLib.Service.Exceptions
+namespace IceLib.Services.Exceptions
 {
     [Serializable]
     public class ValidationException : Exception
     {
-        public IList<ValidationError> Errors { get; set; }
+        public IEnumerable<ValidationError> Errors { get; set; }
 
         public ValidationException() { }
-        public ValidationException(string message) : base(message) { }
-        public ValidationException(string message, Exception inner) : base(message, inner) { }
-        protected ValidationException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context)
-            : base(info, context) { }
 
-        public ValidationException(IList<ValidationError> errors)
+        public ValidationException(string message) : base(message)
+        {
+            var errors = new List<ValidationError>();
+                errors.Add(new ValidationError() { ErrorMessage = message });
+
+            this.Errors = errors.AsEnumerable();
+        }
+
+        public ValidationException(IEnumerable<ValidationError> errors)
         {
             this.Errors = errors;
         }

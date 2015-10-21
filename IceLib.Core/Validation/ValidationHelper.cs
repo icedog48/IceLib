@@ -18,7 +18,7 @@ namespace IceLib.Validation
 
         public IEnumerable<ValidationError> Errors { get { return validationErrors; } }
 
-        public bool HasErrors(object obj)
+        public void Validate(object obj)
         {
             var validationResult = new List<ValidationResult>();
 
@@ -26,13 +26,16 @@ namespace IceLib.Validation
 
             Validator.TryValidateObject(obj, context, validationResult, true);
 
-            this.validationErrors = validationResult.Select(error => new ValidationError()
+            if (validationResult.Any())
             {
-                MemberName = error.MemberNames.FirstOrDefault(),
-                ErrorMessage = error.ErrorMessage
-            });
+                this.validationErrors = validationResult.Select(error => new ValidationError()
+                {
+                    MemberName = error.MemberNames.FirstOrDefault(),
+                    ErrorMessage = error.ErrorMessage
+                });
 
-            return this.validationErrors.Any();
+                throw new IceLib.Services.Exceptions.AttributeValidationException(this.validationErrors);
+            }
         }
     }
 }
