@@ -49,6 +49,8 @@
     <Compile Include="Attributes\HttpVerbAttribute.cs" />
     <Compile Include="Attributes\PostAttribute.cs" />
     <Compile Include="Attributes\PutAttribute.cs" />
+    <Compile Include="Binding\BindHelper.cs" />
+    <Compile Include="Binding\IBindHelper.cs" />
     <Compile Include="Extensions\NancyModuleExtensions.cs" />
     <Compile Include="Helpers\ReflectionHelper.cs" />
     <Compile Include="Helpers\RouteHelper.cs" />
