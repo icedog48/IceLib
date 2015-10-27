@@ -10,27 +10,44 @@ using System.Threading.Tasks;
 
 namespace IceLib.NancyFx.Binding
 {
-    public class BindHelper<TViewModel, TModel> : IBindHelper<TViewModel, TModel>
-        where TViewModel : new()
+    public class BindHelper<TResource, TModel> : IBindHelper<TResource, TModel>
+        where TResource : new()
         where TModel : new()
     {
         private readonly ValidationHelper validationHelper;
-        private readonly IMapper<TViewModel, TModel> mapper;
+        private readonly IMapper<TResource, TModel> resourceMapper;
+        private readonly IMapper<TModel, TResource> modelMapper;
 
         public BindHelper(ValidationHelper validationHelper,
-                          IceLib.Core.Model.Mapping.IMapper<TViewModel, TModel> mapper)
+                          IMapper<TResource, TModel> resourceMapper,
+                          IMapper<TModel, TResource> modelMapper)
         {
             this.validationHelper = validationHelper;
-            this.mapper = mapper;
+            this.resourceMapper = resourceMapper;
+            this.modelMapper = modelMapper;
         }
 
-        public TModel BindValidWith(NancyModule module)
+        public TResource BindResource(NancyModule module)
         {
-            var viewModel = module.Bind<TViewModel>();
+            var viewModel = module.Bind<TResource>();
 
             this.validationHelper.Validate(viewModel);
 
-            return this.mapper.Map(viewModel);
+            return viewModel;
+        }
+
+        public TResource BindResource(TModel model)
+        {
+            return modelMapper.Map(model);
+        }
+
+        public TModel BindModel(NancyModule module)
+        {
+            var viewModel = module.Bind<TResource>();
+
+            this.validationHelper.Validate(viewModel);
+
+            return this.resourceMapper.Map(viewModel);
         }
     }
 }

@@ -2,8 +2,12 @@
 
 namespace IceLib.NancyFx.Binding
 {
-    public interface IBindHelper<TViewModel, TModel> where TModel : new()
+    public interface IBindHelper<TResource, TModel> where TModel : new()
     {
-        TModel BindValidWith(NancyModule module);
+        TModel BindModel(NancyModule module);
+
+        TResource BindResource(NancyModule module);
+
+        TResource BindResource(TModel model);
     }
 }

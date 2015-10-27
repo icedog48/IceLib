@@ -34,7 +34,7 @@ namespace IceLib.Validation
                     ErrorMessage = error.ErrorMessage
                 });
 
-                throw new IceLib.Services.Exceptions.AttributeValidationException(this.validationErrors);
+                throw new IceLib.Services.Exceptions.ValidationException(this.validationErrors);
             }
         }
     }
