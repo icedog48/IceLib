@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nancy;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -12,15 +13,15 @@ namespace IceLib.NancyFx.Attributes
 
         }
 
-        public DeleteAttribute(string route)
-            : base(route)
+        public DeleteAttribute(string actionPath)
+            : base(actionPath)
         {
 
         }
 
-        public override Nancy.NancyModule.RouteBuilder GetRouteBuilder(Nancy.NancyModule module)
+        public override string Method
         {
-            return module.Delete;
+            get { return "DELETE"; }
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using IceLib.NancyFx.Helpers;
-
 using Nancy;
 using Nancy.Responses;
+using Nancy.Routing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +14,7 @@ namespace IceLib.NancyFx.Attributes
     [AttributeUsage(AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
     public abstract class HttpVerbAttribute : Attribute
     {
-        private string route;
+        private string actionPath;
 
         #region Constructors
 
@@ -23,45 +23,25 @@ namespace IceLib.NancyFx.Attributes
 
         }
 
-        public HttpVerbAttribute(string route)
+        public HttpVerbAttribute(string actionPath)
         {
-            this.route = route;
+            this.actionPath = actionPath;
         }
 
         #endregion Constructors
 
         #region Properties
 
-        public string Route
+        public string ActionPath
         {
             get
             {
-                return route ?? string.Empty;
+                return actionPath ?? string.Empty;
             }
         }
 
+        public abstract string Method { get; }
+
         #endregion Properties
-
-        #region Methods
-
-        public abstract Nancy.NancyModule.RouteBuilder GetRouteBuilder(Nancy.NancyModule module);               
-
-        public void BindRoute(NancyModule module, MethodInfo method)
-        {
-            var route = new RouteHelper()
-                .AddPath(this.Route)
-                .ToString();
-
-            var routeBuilder = GetRouteBuilder(module);
-
-                routeBuilder[route] = requestParameters =>
-                {
-                    var methodParameters = ReflectionHelper.GetMethodParameters(method, requestParameters);
-                    
-                    return ReflectionHelper.Invoke(module, method, methodParameters);
-                };
-        }
-
-        #endregion Methods
     }
 }

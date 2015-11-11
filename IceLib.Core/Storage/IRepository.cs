@@ -10,6 +10,8 @@ namespace IceLib.Storage
     {
         IQueryable<TEntity> Items { get; }
 
+        IQueryable<TEntity> ActiveItems { get; set; }
+
         void Add(TEntity entity);
 
         void Add(ICollection<TEntity> entities);

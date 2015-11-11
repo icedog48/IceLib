@@ -12,15 +12,15 @@ namespace IceLib.NancyFx.Attributes
 
         }
 
-        public GetAttribute(string route)
-            : base(route)
+        public GetAttribute(string actionPath)
+            : base(actionPath)
         {
 
         }
 
-        public override Nancy.NancyModule.RouteBuilder GetRouteBuilder(Nancy.NancyModule module)
+        public override string Method
         {
-            return module.Get;
+            get { return "GET"; }
         }
     }
 }
