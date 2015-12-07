@@ -1,5 +1,7 @@
 ﻿using IceLib.NancyFx.Attributes;
 using IceLib.NancyFx.Modules;
+using IceLib.NancyFx.Swagger.Attributes;
+using IceLib.NancyFx.Swagger.Models;
 using Nancy;
 using Nancy.Responses.Negotiation;
 using Nancy.Testing;
@@ -29,7 +31,9 @@ namespace POC.NancyFx.Tests.Fixtures
 
             }
 
-            [Get]
+            [Get(Description ="Return all pets", Produces = "application/text")]
+            [Response(HttpStatusCode.OK, Type = DataType.ReferenceType, ReferenceType = typeof(PetResourceModel))]
+            [Response(HttpStatusCode.Unauthorized)]
             public Negotiator OnGet()
             {
                 var list = new List<PetResourceModel>() { new PetResourceModel() { Name = "Pet" } };
@@ -39,7 +43,10 @@ namespace POC.NancyFx.Tests.Fixtures
                                 .WithModel(list);
             }
 
-            [Get("{id}")]
+            [Get("{id}", Description = "", Produces = "application/text")]
+            [Parameter(ParameterType.Path, Name = "id")] 
+            [Response(HttpStatusCode.OK, ReferenceType = typeof(PetResourceModel))]
+            [Response(HttpStatusCode.Unauthorized)]
             public Negotiator OnGet(int id)
             {
                 return this.Negotiate
@@ -110,7 +117,7 @@ namespace POC.NancyFx.Tests.Fixtures
             var browser = new Browser(bootstrapper);
 
             // Given, When
-            var response = browser.Get("/api/v1/pets/teste", (with) =>
+            var response = browser.Get("/api/pets/teste", (with) =>
             {
                 with.HttpRequest();
                 with.Accept("application/json");
@@ -120,11 +127,7 @@ namespace POC.NancyFx.Tests.Fixtures
             });
 
             // Then
-            Assert.Equal<HttpStatusCode>(HttpStatusCode.OK, response.StatusCode);
-
-            var pet = response.Body.DeserializeJson<PetResourceModel>();
-            Assert.NotNull(pet);
-            Assert.Equal("Pet", pet.Name);
+            Assert.Equal<HttpStatusCode>(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         #endregion Tests

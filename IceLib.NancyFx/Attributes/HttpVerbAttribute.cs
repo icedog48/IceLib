@@ -43,5 +43,13 @@ namespace IceLib.NancyFx.Attributes
         public abstract string Method { get; }
 
         #endregion Properties
+
+        #region Swagger
+
+        public string Description { get; set; }
+
+        public string Produces { get; set; }
+
+        #endregion Swagger
     }
 }
