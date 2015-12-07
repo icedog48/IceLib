@@ -9,24 +9,26 @@
         {
             @:      "@response.ResponseCodeAsInt" : {
             @:          "description" : "@response.Description",
+            if (response.Schema.TypeAsInt != 0) 
+            { 
             @:          "schema" : {
-            if (response.Schema.TypeAsInt == 12) // ReferenceType
-            {
-                if (response.Schema.ReferenceType.IsArray)
+                if (response.Schema.TypeAsInt == 12) // ReferenceType
                 {
-            @:              "type": "array",
-            @:              "$ref": "#/definitions/@response.Schema.ReferenceType.GetElementType().Name"
+                    if (response.Schema.ReferenceType.IsArray)
+                    {
+                    @:          "type": "array",
+                    @:          "$ref": "#/definitions/@response.Schema.ReferenceType.GetElementType().Name"
+                    }
+                    else
+                    {
+                    @:          "$ref": "#/definitions/@response.Schema.ReferenceType.Name"
+                    }
                 }
-                else
+                else 
                 {
-            @:              "$ref": "#/definitions/@response.Schema.ReferenceType.Name"
+                @:              "type": @response.Schema.TypeAsString
                 }
             }
-            else
-            {
-            @:              "type": @response.Schema.TypeAsString
-            }
-
             @:          }
             @:      }
                 }

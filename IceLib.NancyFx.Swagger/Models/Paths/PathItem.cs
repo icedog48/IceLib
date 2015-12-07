@@ -9,6 +9,11 @@ namespace IceLib.NancyFx.Swagger.Models
 {
     public class PathItem
     {
+        public PathItem()
+        {
+            this.Operations = new List<Operation>();
+        }
+
         public string Url { get; set; }
 
         public IList<Operation> Operations { get; set; }

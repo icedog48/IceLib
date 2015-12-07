@@ -27,7 +27,10 @@ namespace IceLib.NancyFx.Swagger.Attributes
             {
                 _Type = value;
 
-                this.ReferenceType = null;
+                if (_Type != DataType.ReferenceType)
+                {
+                    this.ReferenceType = null;
+                }
             }
         }
 
@@ -45,11 +48,11 @@ namespace IceLib.NancyFx.Swagger.Attributes
             }
         }
 
-        public Models.Response AsModel
+        public Models.OperationResponse AsModel
         {
             get
             {
-                return new Models.Response()
+                return new Models.OperationResponse()
                 {
                     Description = this.Description,
                     ResponseCode = this.Code,

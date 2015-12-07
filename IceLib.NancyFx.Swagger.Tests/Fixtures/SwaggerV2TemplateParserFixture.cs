@@ -5,6 +5,14 @@ using RazorEngine.Templating;
 using IceLib.NancyFx.Swagger.Models;
 using Nancy;
 using IceLib.NancyFx.Swagger.Resources;
+using IceLib.NancyFx.Swagger.Parser;
+using System;
+using System.Linq;
+using IceLib.NancyFx.Modules;
+using Nancy.Responses.Negotiation;
+using IceLib.NancyFx.Attributes;
+using IceLib.NancyFx.Swagger.Attributes;
+using IceLib.NancyFx.Extensions;
 
 namespace IceLib.NancyFx.Swagger.Tests
 {
@@ -20,15 +28,27 @@ namespace IceLib.NancyFx.Swagger.Tests
         public string Message { get; set; }
     }
 
-    public class Class1
+    public class PetsModule : APIModule 
     {
-        public Class1()
+        [Get(Description="Get all pets", Produces = "application/json")]
+        [Response(HttpStatusCode.OK, Description = "A list of pets", ReferenceType = typeof(Pet))]
+        [Response(HttpStatusCode.Unauthorized, Description = "Access denied")]
+        public Negotiator OnGet() 
+        {
+            return Negotiate
+                        .WithModel(new List<Pet>() { new Pet() });
+        }
+    }
+
+    public class SwaggerV2TemplateParserFixture
+    {
+        public SwaggerV2TemplateParserFixture()
         {
             
         }
 
         [Fact]
-        public void Fixture()
+        public void Should_transfome_model_to_valid_json()
         {
             var swaggerModel = new SwaggerV2()
             {
@@ -36,18 +56,66 @@ namespace IceLib.NancyFx.Swagger.Tests
                 Paths = new List<PathItem>() { PathMock }
             };
 
-            var Swagger = System.Text.Encoding.UTF8.GetString(Templates.Swagger);
+            var result = new SwaggerV2TemplateParser().ParseJSON(swaggerModel);
 
-            var _Info = System.Text.Encoding.UTF8.GetString(Templates._Info);
+            Assert.Equal(ExpectedJSON, result);
+        }
+
+        [Fact]
+        public void Should_create_model_instances_from_attributes() 
+        {
+            var swagger = new SwaggerV2();
+
+            var methods = new PetsModule().GetActionMethods();
+
+            foreach (var method in methods)
+	        {
+                var pathItem = new PathItem();
+
+                var httpVerbAttributes = method.GetCustomAttributes(typeof(HttpVerbAttribute), true).FirstOrDefault();
+
+                if (httpVerbAttributes != null)
+	            {
+                    var verb = (httpVerbAttributes as HttpVerbAttribute);
+
+                    pathItem.Url = verb.ActionPath;
+
+                    var operation = new Operation()
+                    {
+                        Description = verb.Description,
+                        HttpMethod = verb.Method,
+                        Produces = verb.Produces
+                    };
+
+                    var parameterAttributes = method.GetCustomAttributes(typeof(ParameterAttribute), true);
+
+                    foreach (var paremeter in parameterAttributes)
+	                {
+                        var parameter = (paremeter as ParameterAttribute);
+
+                        operation.Parameters.Add(parameter.AsModel);
+	                }
+
+                    var resposneAttributes = method.GetCustomAttributes(typeof(ResponseAttribute), true);
+
+                    foreach (var operationResponse in resposneAttributes)
+	                {
+                        var response = (operationResponse as ResponseAttribute);
+
+                        operation.Responses.Add(response.AsModel);
+	                }
+
+                    pathItem.Operations.Add(operation);
+	            }
+
+                swagger.Paths.Add(pathItem);
+	        }
 
             var _Path = System.Text.Encoding.UTF8.GetString(Templates._Path);
 
-            var razorService = Engine.Razor;
-                razorService.AddTemplate("_Path", _Path);
-                razorService.AddTemplate("_Info", _Info);
-                razorService.AddTemplate("Swagger", Swagger);
+            var pathModel =  swagger.Paths.First();
 
-            var result = Engine.Razor.RunCompile(Swagger, "Swagger.cshtml", null, swaggerModel);
+            var result = Engine.Razor.RunCompile(_Path, "_Path.cshtml", null, pathModel);
 
             Assert.Equal(ExpectedJSON, result);
         }
@@ -68,9 +136,9 @@ namespace IceLib.NancyFx.Swagger.Tests
                         HttpMethod = "GET",
                         Description = "Returns all pets from the system that the user has access to",
                         Produces = "application/json",
-                        Responses = new List<Models.Response>()
+                        Responses = new List<Models.OperationResponse>()
                         {
-                            new Models.Response()
+                            new Models.OperationResponse()
                             {
                                 Description = "A list of pets.",
                                 ResponseCode = HttpStatusCode.OK,
@@ -81,7 +149,7 @@ namespace IceLib.NancyFx.Swagger.Tests
                                 }
                             },
 
-                            new Models.Response()
+                            new Models.OperationResponse()
                             {
                                 Description = "Acess error.",
                                 ResponseCode = HttpStatusCode.Unauthorized,
@@ -120,8 +188,8 @@ namespace IceLib.NancyFx.Swagger.Tests
             get
             {
                 return
-@"﻿﻿{
-	""swagger"": ""2.0"",
+@"﻿{
+    ""swagger"": ""2.0"",
 
     ﻿    ""info"": {
         ""description"": ""Pet Store API"",

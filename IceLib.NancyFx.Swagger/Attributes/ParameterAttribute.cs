@@ -1,4 +1,5 @@
 ﻿using IceLib.NancyFx.Swagger.Models;
+using IceLib.NancyFx.Swagger.Models.Paths;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -56,6 +57,25 @@ namespace IceLib.NancyFx.Swagger.Attributes
                 {
                     this.Type = DataType.ReferenceType;
                 }
+            }
+        }
+
+        public Parameter AsModel
+        {
+            get
+            {
+                return new Parameter()
+                {
+                    Description = this.Description,
+                    In = this.In,
+                    Name = this.Name,
+                    Required = this.Required,
+                    Schema = new Schema()
+                    {
+                        Type = this.Type,
+                        ReferenceType = this.ReferenceType
+                    }
+                };
             }
         }
     }

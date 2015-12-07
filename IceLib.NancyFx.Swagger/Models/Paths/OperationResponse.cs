@@ -3,7 +3,7 @@ using System;
 
 namespace IceLib.NancyFx.Swagger.Models
 {
-    public class Response
+    public class OperationResponse
     {
         public HttpStatusCode ResponseCode { get; set; }
 

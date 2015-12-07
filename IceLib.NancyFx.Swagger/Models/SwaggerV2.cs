@@ -4,6 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using RazorEngine;
+using RazorEngine.Templating;
+using IceLib.NancyFx.Swagger.Resources;
+
 namespace IceLib.NancyFx.Swagger.Models
 {
     public class SwaggerV2
