@@ -12,7 +12,10 @@ using IceLib.NancyFx.Modules;
 using Nancy.Responses.Negotiation;
 using IceLib.NancyFx.Attributes;
 using IceLib.NancyFx.Swagger.Attributes;
+using IceLib.NancyFx.Swagger.Extensions;
 using IceLib.NancyFx.Extensions;
+using IceLib.NancyFx.Helpers;
+using System.Reflection;
 
 namespace IceLib.NancyFx.Swagger.Tests
 {
@@ -30,9 +33,15 @@ namespace IceLib.NancyFx.Swagger.Tests
 
     public class PetsModule : APIModule 
     {
-        [Get(Description="Get all pets", Produces = "application/json")]
-        [Response(HttpStatusCode.OK, Description = "A list of pets", ReferenceType = typeof(Pet))]
+        public PetsModule()
+            : base("/api/v1/pets")
+        {
+
+        }
+
+        [Get(Description="Get all pets", Produces = "application/json")]        
         [Response(HttpStatusCode.Unauthorized, Description = "Access denied")]
+        [Response(HttpStatusCode.OK, Description = "A list of pets", ReferenceType = typeof(Pet[]))]
         public Negotiator OnGet() 
         {
             return Negotiate
@@ -64,58 +73,9 @@ namespace IceLib.NancyFx.Swagger.Tests
         [Fact]
         public void Should_create_model_instances_from_attributes() 
         {
-            var swagger = new SwaggerV2();
-
-            var methods = new PetsModule().GetActionMethods();
-
-            foreach (var method in methods)
-	        {
-                var pathItem = new PathItem();
-
-                var httpVerbAttributes = method.GetCustomAttributes(typeof(HttpVerbAttribute), true).FirstOrDefault();
-
-                if (httpVerbAttributes != null)
-	            {
-                    var verb = (httpVerbAttributes as HttpVerbAttribute);
-
-                    pathItem.Url = verb.ActionPath;
-
-                    var operation = new Operation()
-                    {
-                        Description = verb.Description,
-                        HttpMethod = verb.Method,
-                        Produces = verb.Produces
-                    };
-
-                    var parameterAttributes = method.GetCustomAttributes(typeof(ParameterAttribute), true);
-
-                    foreach (var paremeter in parameterAttributes)
-	                {
-                        var parameter = (paremeter as ParameterAttribute);
-
-                        operation.Parameters.Add(parameter.AsModel);
-	                }
-
-                    var resposneAttributes = method.GetCustomAttributes(typeof(ResponseAttribute), true);
-
-                    foreach (var operationResponse in resposneAttributes)
-	                {
-                        var response = (operationResponse as ResponseAttribute);
-
-                        operation.Responses.Add(response.AsModel);
-	                }
-
-                    pathItem.Operations.Add(operation);
-	            }
-
-                swagger.Paths.Add(pathItem);
-	        }
-
-            var _Path = System.Text.Encoding.UTF8.GetString(Templates._Path);
-
-            var pathModel =  swagger.Paths.First();
-
-            var result = Engine.Razor.RunCompile(_Path, "_Path.cshtml", null, pathModel);
+            var swagger = SwaggerV2.CreateInstance(Assembly.GetExecutingAssembly());
+            
+            var result = new SwaggerV2TemplateParser().ParseJSON(swagger);
 
             Assert.Equal(ExpectedJSON, result);
         }

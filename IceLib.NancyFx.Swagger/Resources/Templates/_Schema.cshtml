@@ -1,0 +1,12 @@
+﻿                            @if (Model.TypeAsInt == 12) // ReferenceType
+                            {
+                                if (Model.ReferenceType.IsArray)
+                                {
+                                @:"type": "array",
+                                }
+                                @:"$ref": "#/definitions/@Model.ReferenceTypeAsString"
+                            }
+                            else
+                            {
+                                @:"type": @Model.TypeAsString
+                            }

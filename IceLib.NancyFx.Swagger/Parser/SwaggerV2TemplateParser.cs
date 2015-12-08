@@ -19,7 +19,16 @@ namespace IceLib.NancyFx.Swagger.Parser
 
             var _Path = System.Text.Encoding.UTF8.GetString(Templates._Path);
 
+            var _Operation = System.Text.Encoding.UTF8.GetString(Templates._Operation);
+
+            var _OperationResponse = System.Text.Encoding.UTF8.GetString(Templates._OperationResponse);
+
+            var _Schema = System.Text.Encoding.UTF8.GetString(Templates._Schema);
+
             var razorService = Engine.Razor;
+                razorService.AddTemplate("_Schema", _Schema);
+                razorService.AddTemplate("_OperationResponse", _OperationResponse);
+                razorService.AddTemplate("_Operation", _Operation);
                 razorService.AddTemplate("_Path", _Path);
                 razorService.AddTemplate("_Info", _Info);
                 razorService.AddTemplate("Swagger", Swagger);

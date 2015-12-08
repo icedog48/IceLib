@@ -1,0 +1,9 @@
+﻿                    "@Model.ResponseCodeAsInt" : {
+                        "description" : "@Model.Description",
+                        @if (Model.Schema.TypeAsInt != 0)
+                        {
+                        @:"schema" : { 
+                        @Include("_Schema", Model.Schema)
+                        @:}
+                        } 
+                    },

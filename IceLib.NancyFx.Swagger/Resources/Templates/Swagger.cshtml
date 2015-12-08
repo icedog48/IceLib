@@ -1,9 +1,13 @@
 ﻿{
     "swagger": "2.0",
 
-    @Include("_Info", @Model.Info), 
-
-    @foreach (var path in Model.Paths) {
-        @Include("_Path", path) @:, 
+    "info": {
+        @Include("_Info", Model.Info)
+    },
+    
+    "paths": {
+        @foreach (var path in Model.Paths) {
+            @Include("_Path", path)
+        }
     }
 }

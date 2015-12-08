@@ -15,5 +15,13 @@ namespace IceLib.NancyFx.Swagger.Models
         public string TypeAsString { get { return this.Type.ToString(); } }
 
         public int TypeAsInt { get { return (int)this.Type; } }
+
+        public string ReferenceTypeAsString
+        {
+            get 
+            {
+                return (this.ReferenceType.IsArray) ? this.ReferenceType.GetElementType().Name : this.ReferenceType.Name;
+            }
+        }
     }
 }

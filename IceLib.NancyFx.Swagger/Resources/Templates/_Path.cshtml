@@ -1,38 +1,6 @@
-﻿    "@Model.Url" : {
-    @foreach (var operation in Model.Operations)
-    {
-        @: "@operation.HttpMethod" : {
-        @:      "description" : "@operation.Description",
-        @:      "produces": [ "@operation.Produces" ],
-        @:      "responses": {
-        foreach (var response in operation.Responses)
-        {
-            @:      "@response.ResponseCodeAsInt" : {
-            @:          "description" : "@response.Description",
-            if (response.Schema.TypeAsInt != 0) 
-            { 
-            @:          "schema" : {
-                if (response.Schema.TypeAsInt == 12) // ReferenceType
-                {
-                    if (response.Schema.ReferenceType.IsArray)
-                    {
-                    @:          "type": "array",
-                    @:          "$ref": "#/definitions/@response.Schema.ReferenceType.GetElementType().Name"
-                    }
-                    else
-                    {
-                    @:          "$ref": "#/definitions/@response.Schema.ReferenceType.Name"
-                    }
-                }
-                else 
-                {
-                @:              "type": @response.Schema.TypeAsString
-                }
+﻿        "@Model.Url" : {
+            @foreach (var operation in Model.Operations)
+            {
+                @Include("_Operation", operation)
             }
-            @:          }
-            @:      }
-                }
-        @:      }
-        @: }
         }
-    }

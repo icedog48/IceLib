@@ -1,0 +1,10 @@
+﻿            "@Model.HttpMethod" : {
+                "description" : "@Model.Description",
+                "produces": [ "@Model.Produces" ],
+                "responses": {
+                    @foreach (var operationResponse in Model.Responses)
+                    {
+                        @Include("_OperationResponse", operationResponse)
+                    }
+                }
+            }

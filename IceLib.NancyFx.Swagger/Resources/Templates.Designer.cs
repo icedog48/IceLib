@@ -73,9 +73,39 @@ namespace IceLib.NancyFx.Swagger.Resources {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        public static byte[] _Operation {
+            get {
+                object obj = ResourceManager.GetObject("_Operation", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] _OperationResponse {
+            get {
+                object obj = ResourceManager.GetObject("_OperationResponse", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         public static byte[] _Path {
             get {
                 object obj = ResourceManager.GetObject("_Path", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] _Schema {
+            get {
+                object obj = ResourceManager.GetObject("_Schema", resourceCulture);
                 return ((byte[])(obj));
             }
         }

@@ -8,6 +8,13 @@ namespace IceLib.NancyFx.Swagger.Models
 {
     public class APIInfo
     {
+        public APIInfo()
+        {
+            this.Contact = new Contact();
+
+            this.License = new License();
+        }
+
         public string Title { get; set; }
 
         public string Description { get; set; }
