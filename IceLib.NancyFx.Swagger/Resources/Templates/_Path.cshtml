@@ -1,6 +1,7 @@
 ﻿        "@Model.Url" : {
+            @{ var counter = 0; }
             @foreach (var operation in Model.Operations)
             {
-                @Include("_Operation", operation)
+                @Include("_Operation", operation) @(++counter == Model.Operations.Count ? string.Empty : ", ")
             }
         }

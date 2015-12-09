@@ -6,8 +6,10 @@
     },
     
     "paths": {
-        @foreach (var path in Model.Paths) {
-            @Include("_Path", path)
+        @{ var counter = 0; }
+        @foreach (var path in Model.Paths)
+        {
+            @Include("_Path", path) @(++counter == Model.Paths.Count ? string.Empty : ", ")
         }
     }
 }

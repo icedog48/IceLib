@@ -2,9 +2,12 @@
                 "description" : "@Model.Description",
                 "produces": [ "@Model.Produces" ],
                 "responses": {
+                    @{ var counter = 0; }
                     @foreach (var operationResponse in Model.Responses)
                     {
-                        @Include("_OperationResponse", operationResponse)
+                        @Include("_OperationResponse", operationResponse) 
+                        
+                        @: @(++counter == Model.Responses.Count ? string.Empty : ", ")
                     }
                 }
             }
