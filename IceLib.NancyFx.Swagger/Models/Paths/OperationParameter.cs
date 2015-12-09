@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IceLib.NancyFx.Swagger.Models.Paths
 {
-    public class Parameter
+    public class OperationParameter
     {
         public ParameterType In { get; set; }
 

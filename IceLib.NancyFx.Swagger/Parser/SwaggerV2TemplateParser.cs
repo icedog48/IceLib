@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace IceLib.NancyFx.Swagger.Parser
 {
-    public class SwaggerV2TemplateParser : ISwaggerV2Parser
+    public class SwaggerV2TemplateParser
     {
         public string ParseJSON(Models.SwaggerV2 swaggerV2)
         {

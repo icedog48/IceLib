@@ -60,11 +60,11 @@ namespace IceLib.NancyFx.Swagger.Attributes
             }
         }
 
-        public Parameter AsModel
+        public OperationParameter AsModel
         {
             get
             {
-                return new Parameter()
+                return new OperationParameter()
                 {
                     Description = this.Description,
                     In = this.In,

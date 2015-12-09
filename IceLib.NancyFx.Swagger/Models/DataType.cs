@@ -21,5 +21,6 @@ namespace IceLib.NancyFx.Swagger.Models
        , DateTime       = 10
        , Password       = 11
        , ReferenceType  = 12
+       , Array = 13
     }
 }

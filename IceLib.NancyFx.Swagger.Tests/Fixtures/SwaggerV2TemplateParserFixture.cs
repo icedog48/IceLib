@@ -16,6 +16,7 @@ using IceLib.NancyFx.Swagger.Extensions;
 using IceLib.NancyFx.Extensions;
 using IceLib.NancyFx.Helpers;
 using System.Reflection;
+using Newtonsoft.Json;
 
 namespace IceLib.NancyFx.Swagger.Tests
 {
@@ -29,24 +30,6 @@ namespace IceLib.NancyFx.Swagger.Tests
         public string FieldName { get; set; }
 
         public string Message { get; set; }
-    }
-
-    public class PetsModule : APIModule 
-    {
-        public PetsModule()
-            : base("/api/v1/pets")
-        {
-
-        }
-
-        [Get(Description="Get all pets", Produces = "application/json")]        
-        [Response(HttpStatusCode.Unauthorized, Description = "Access denied")]
-        [Response(HttpStatusCode.OK, Description = "A list of pets", ReferenceType = typeof(Pet[]))]
-        public Negotiator OnGet() 
-        {
-            return Negotiate
-                        .WithModel(new List<Pet>() { new Pet() });
-        }
     }
 
     public class SwaggerV2TemplateParserFixture
@@ -78,6 +61,16 @@ namespace IceLib.NancyFx.Swagger.Tests
             var result = new SwaggerV2TemplateParser().ParseJSON(swagger);
 
             Assert.Equal(ExpectedJSON, result);
+        }
+
+        [Fact]
+        public void Should_create_json()
+        {
+            var swagger = SwaggerV2.CreateInstance(Assembly.GetExecutingAssembly());
+
+            string json = SwaggerV2JsonConverter.SerializeObject(swagger);
+
+            Assert.Equal(ExpectedJSON, json);
         }
 
         public PathItem PathMock

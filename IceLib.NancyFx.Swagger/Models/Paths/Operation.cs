@@ -5,6 +5,8 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace IceLib.NancyFx.Swagger.Models
 {
@@ -12,15 +14,18 @@ namespace IceLib.NancyFx.Swagger.Models
     {
         public Operation()
         {
-            this.Parameters = new List<Parameter>();
+            this.Parameters = new List<OperationParameter>();
             this.Responses = new List<OperationResponse>();
         }
 
         public string Description { get; set; }
-        public string HttpMethod { get; set; }
+
         public string Produces { get; set; }
 
-        public IList<Parameter> Parameters { get; set; }
+        public string HttpMethod { get; set; }
+
+        public IList<OperationParameter> Parameters { get; set; }
+
         public IList<OperationResponse> Responses { get; set; }
     }
 }

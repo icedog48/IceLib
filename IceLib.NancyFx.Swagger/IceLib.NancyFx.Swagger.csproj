@@ -37,6 +37,10 @@
       <HintPath>..\packages\Nancy.1.4.2\lib\net40\Nancy.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="RazorEngine, Version=3.7.4.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
       <HintPath>..\packages\RazorEngine.3.7.4\lib\net45\RazorEngine.dll</HintPath>
       <Private>True</Private>
@@ -63,13 +67,15 @@
     <Compile Include="Models\Info\APIInfo.cs" />
     <Compile Include="Models\DataType.cs" />
     <Compile Include="Models\ParameterType.cs" />
+    <Compile Include="Models\Paths\DataContract.cs" />
     <Compile Include="Models\Paths\Operation.cs" />
-    <Compile Include="Models\Paths\Parameter.cs" />
+    <Compile Include="Models\Paths\OperationParameter.cs" />
     <Compile Include="Models\Paths\OperationResponse.cs" />
     <Compile Include="Models\Paths\PathItem.cs" />
     <Compile Include="Models\Schema.cs" />
     <Compile Include="Models\SwaggerV2.cs" />
-    <Compile Include="Parser\ISwaggerV2Parser.cs" />
+    <Compile Include="Nancy\SwaggerModule.cs" />
+    <Compile Include="Parser\SwaggerV2JsonConverter.cs" />
     <Compile Include="Parser\SwaggerV2TemplateParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Templates.Designer.cs">

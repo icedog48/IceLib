@@ -15,8 +15,7 @@ using IceLib.NancyFx.Modules;
 
 using System.Reflection;
 using IceLib.NancyFx.Helpers;
-
-
+using Newtonsoft.Json;
 
 namespace IceLib.NancyFx.Swagger.Models
 {
@@ -29,8 +28,10 @@ namespace IceLib.NancyFx.Swagger.Models
             Paths = new List<PathItem>();
         }
 
+        [JsonProperty("info")]
         public APIInfo Info { get; set; }
 
+        [JsonProperty("paths")]
         public IList<PathItem> Paths { get; set; }
 
         public static SwaggerV2 CreateInstance(Assembly assembly) 

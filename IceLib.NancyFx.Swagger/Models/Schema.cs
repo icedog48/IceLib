@@ -20,6 +20,8 @@ namespace IceLib.NancyFx.Swagger.Models
         {
             get 
             {
+                if (this.ReferenceType == null) return string.Empty; 
+
                 return (this.ReferenceType.IsArray) ? this.ReferenceType.GetElementType().Name : this.ReferenceType.Name;
             }
         }
