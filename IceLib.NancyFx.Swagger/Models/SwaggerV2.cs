@@ -28,11 +28,17 @@ namespace IceLib.NancyFx.Swagger.Models
             Paths = new List<PathItem>();
         }
 
+        [JsonProperty("swagger")]
+        public string SpecsVersion { get { return "2.0"; } }
+
         [JsonProperty("info")]
         public APIInfo Info { get; set; }
 
         [JsonProperty("paths")]
         public IList<PathItem> Paths { get; set; }
+
+        [JsonProperty("definitions")]
+        public IList<Type> Definitions { get; set; }
 
         public static SwaggerV2 CreateInstance(Assembly assembly) 
         {

@@ -11,6 +11,69 @@ namespace IceLib.NancyFx.Swagger.Parser
 {
     public class SwaggerV2JsonConverter : JsonConverter
     {
+        public JObject GetSchema(OperationResponse operationResponse)
+        {
+            var schema = new JObject();
+
+            if (operationResponse.Schema.Type == DataType.ReferenceType)
+            {
+                if (operationResponse.Schema.ReferenceType.IsArray)
+                {
+                    schema.Add("type", "array");
+                }
+
+                var schemaItem = new JObject();
+                schemaItem.Add("$ref", string.Format("#/definitions/{0}", operationResponse.Schema.ReferenceTypeAsString));
+
+                schema.Add("items", schemaItem);
+            }
+            else
+            {
+                schema.Add("type", operationResponse.Schema.TypeAsString);
+            }
+
+            return schema;
+        }
+
+        public JProperty GetOperationResponseProperty(OperationResponse operationResponse)
+        {
+            var operationResponseProperty = new JProperty(operationResponse.ResponseCodeAsInt.ToString());
+
+            var operationResponseObj = new JObject();
+            operationResponseObj.Add("description", operationResponse.Description);
+
+            var schemaHasDataType = operationResponse.Schema != null && operationResponse.Schema.TypeAsInt != 0;
+
+            if (schemaHasDataType)
+            {
+                operationResponseObj.Add("schema", this.GetSchema(operationResponse));
+            }
+
+            operationResponseProperty.Value = operationResponseObj;
+
+            return operationResponseProperty;
+        }
+
+        public JProperty GetOperationProperty(Operation operation)
+        {
+            var responses = new JObject();
+
+            foreach (var operationResponse in operation.Responses)
+            {
+                responses.Add(GetOperationResponseProperty(operationResponse));
+            }
+
+            var operationObj = new JObject();
+                operationObj.Add("description", operation.Description);
+                operationObj.Add("produces", new JArray(operation.Produces));
+                operationObj.Add("responses", responses);
+
+            var operationProperty = new JProperty(operation.HttpMethod.ToLower());
+                operationProperty.Value = operationObj;
+
+            return operationProperty;
+        }
+
         #region JsonConverter
 
         public override bool CanRead
@@ -30,79 +93,88 @@ namespace IceLib.NancyFx.Swagger.Parser
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            JToken t = JToken.FromObject(value);
+            JToken valueToken = JToken.FromObject(value);
 
-            if (t.Type != JTokenType.Object)
+            if (valueToken.Type != JTokenType.Object)
             {
-                t.WriteTo(writer);
+                valueToken.WriteTo(writer);
             }
             else
             {
-                var swagger = value as SwaggerV2;
+                var swaggerV2 = value as SwaggerV2;
 
-                JObject o = (JObject)t;
+                var valueObject = (JObject)valueToken;
 
-                foreach (var pathItem in swagger.Paths)
+                foreach (var pathItem in swaggerV2.Paths)
                 {
                     var pathItemProperty = new JProperty(pathItem.Url);
 
                     foreach (var operation in pathItem.Operations)
                     {
-                        var responses = new JObject();   
-
-                        foreach (var operationResponse in operation.Responses)
-                        {
-                            var operationResponseProperty = new JProperty(operationResponse.ResponseCodeAsInt.ToString());
-
-                            var operationResponseObj = new JObject();
-                                operationResponseObj.Add("description", operationResponse.Description);
-
-                            if (operationResponse.Schema != null && operationResponse.Schema.TypeAsInt != 0)
-                            {
-                                var schema = new JObject();
-                                
-                                if (operationResponse.Schema.Type == DataType.ReferenceType)
-                                {
-                                    if (operationResponse.Schema.ReferenceType.IsArray)
-                                    {
-                                        schema.Add("type", "array");
-                                    }
-
-                                    var schemaItem = new JObject();
-                                        schemaItem.Add("$ref", operationResponse.Schema.ReferenceTypeAsString);
-
-                                        schema.Add("items", schemaItem);    
-                                }
-                                else
-                                {
-                                    schema.Add("type", operationResponse.Schema.TypeAsString);
-                                }
-
-                                operationResponseObj.Add("schema", schema);
-                            }
-
-                            operationResponseProperty.Value = operationResponseObj;
-
-                            responses.Add(operationResponseProperty);
-                        }
-
-                        var operationObj = new JObject();
-                            operationObj.Add("description", operation.Description);
-                            operationObj.Add("produces", new JArray(operation.Produces));
-                            operationObj.Add("responses", responses);
-
-                        var operationProperty = new JProperty(operation.HttpMethod);
-                            operationProperty.Value = operationObj;
-
-                        pathItemProperty.Value = new JObject(operationProperty);
+                        pathItemProperty.Value = new JObject(GetOperationProperty(operation));
                     }
 
                     var pathItemObj = new JObject(pathItemProperty);
 
-                    o.Property("paths").Value = pathItemObj;
+                    valueObject.Property("paths").Value = pathItemObj;
                 }
-                
-                o.WriteTo(writer);
+
+                var parameterTypes = swaggerV2.Paths
+                                                .SelectMany(x => x.Operations)
+                                                .SelectMany(x => x.Parameters)
+                                                    .Where(x => x.Schema != null && x.Schema.Type == DataType.ReferenceType)
+                                                        .Select(x => x.Schema.ReferenceType);
+
+                var responseTypes = swaggerV2.Paths
+                                                .SelectMany(x => x.Operations)
+                                                .SelectMany(x => x.Responses)
+                                                    .Where(x => x.Schema != null && x.Schema.Type == DataType.ReferenceType)
+                                                        .Select(x => x.Schema.ReferenceType);
+
+                var definitionTypes = new List<Type>()
+                                            .Union(parameterTypes)
+                                            .Union(responseTypes);
+
+                var definitionsObject = new JObject();
+
+                foreach (var type in definitionTypes)
+                {
+                    var propType = type;
+
+                    if (type.IsArray) propType = type.GetElementType();
+
+                    var propertiesObject = new JObject();
+
+                    var propType_Properties = propType.GetProperties();
+
+                    foreach (var typeProperty in propType_Properties)
+                    {
+                        var typePropertyObject = new JObject();
+                            typePropertyObject.Add("type", "string");
+                            typePropertyObject.Add("description", "");
+
+                        var typePropertyJSONProperty = new JProperty(typeProperty.Name);
+                            typePropertyJSONProperty.Value = typePropertyObject;
+
+                        propertiesObject.Add(typePropertyJSONProperty);
+                    }
+
+                    var propertiesProperty = new JProperty("properties");
+                        propertiesProperty.Value = propertiesObject;
+
+                    var definitionObject = new JObject();
+                        definitionObject.Add("type", "object");
+                        definitionObject.Add(propertiesProperty);
+
+                    var definitionProperty = new JProperty(propType.Name);
+                        definitionProperty.Value = definitionObject;
+
+                    definitionsObject.Add(definitionProperty);
+                }
+
+                valueObject.Property("definitions").Value = definitionsObject;
+
+                valueObject.WriteTo(writer);
             }
         }
 
